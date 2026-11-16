@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星座全解 · 12 星座 × 三日运势 × 星盘</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♒</text></svg>">
+<style>
+:root{
+  --bg:#06060e; --bg2:#0c0b19;
+  --panel:rgba(255,255,255,.045);
+  --panel2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.10);
+  --line2:rgba(255,255,255,.18);
+  --text:#ece9f6; --muted:#9b96b4; --dim:#6e6a86;
+  --gold:#e6c07c; --gold2:#f6e2b8;
+  --violet:#a58bec; --pink:#f08fb0;
+  --fire:#ff7361; --earth:#d8a35f; --air:#63d5c6; --water:#6fa8ff;
+  --r:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--text); background:var(--bg);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 12% -8%, rgba(130,90,220,.30), transparent 62%),
+    radial-gradient(800px 520px at 88% 4%, rgba(230,192,124,.14), transparent 60%),
+    radial-gradient(1000px 700px at 50% 108%, rgba(70,120,255,.16), transparent 65%),
+    linear-gradient(180deg,#06060e 0%,#080814 40%,#06060e 100%);
+}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.75}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw 4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
+
+/* ---------- 顶部导航 ---------- */
+header.top{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(14px) saturate(140%);
+  background:linear-gradient(180deg,rgba(6,6,14,.92),rgba(6,6,14,.62));
+  border-bottom:1px solid var(--line);
+}
+.top-in{max-width:1240px;margin:0 auto;padding:10px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.5px;font-size:15px}
+.brand .orb{
+  width:22px;height:22px;border-radius:50%;
+  background:conic-gradient(from 0deg,var(--gold),var(--violet),var(--water),var(--gold));
+  box-shadow:0 0 14px rgba(230,192,124,.55); flex:none;
+}
+nav.links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.links a{
+  color:var(--muted);text-decoration:none;font-size:13px;padding:5px 10px;border-radius:999px;
+  border:1px solid transparent;transition:.18s;white-space:nowrap;
+}
+nav.links a:hover{color:var(--gold2);border-color:var(--line2);background:var(--panel)}
+
+/* ---------- 布局 ---------- */
+main{max-width:1240px;margin:0 auto;padding:0 22px 90px}
+section{margin:56px 0 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+.sec-num{
+  font-family:ui-monospace,Consolas,monospace;font-size:12px;letter-spacing:2px;
+  color:var(--gold);border:1px solid rgba(230,192,124,.35);border-radius:6px;padding:1px 7px;
+}
+h2{font-size:clamp(20px,2.6vw,27px);margin:0;font-weight:700;letter-spacing:.4px}
+.sec-sub{color:var(--muted);font-size:13.5px;margin:2px 0 22px;max-width:78ch}
+h3{font-size:16px;margin:26px 0 10px;font-weight:700;color:var(--gold2)}
+p{margin:0 0 12px}
+
+/* ---------- Hero ---------- */
+.hero{padding:66px 0 8px;text-align:center;position:relative}
+.hero .kicker{
+  display:inline-block;font-size:12px;letter-spacing:3px;color:var(--gold);
+  border:1px solid rgba(230,192,124,.32);border-radius:999px;padding:4px 14px;margin-bottom:20px;
+  background:rgba(230,192,124,.06);
+}
+.hero h1{
+  font-size:clamp(30px,5.6vw,56px);line-height:1.18;margin:0 0 16px;font-weight:800;letter-spacing:1px;
+  background:linear-gradient(120deg,#fff 5%,var(--gold2) 42%,var(--violet) 78%,var(--water) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .lead{color:#c9c4dd;max-width:70ch;margin:0 auto 24px;font-size:15.5px}
+.winbar{
+  display:inline-flex;gap:0;border:1px solid var(--line2);border-radius:12px;overflow:hidden;
+  background:var(--panel);flex-wrap:wrap;justify-content:center;
+}
+.winbar div{padding:10px 18px;border-right:1px solid var(--line);text-align:left;min-width:118px}
+.winbar div:last-child{border-right:0}
+.winbar b{display:block;font-size:15px;color:var(--gold2)}
+.winbar span{font-size:11.5px;color:var(--dim);letter-spacing:1px}
+
+/* ---------- 通用卡片 ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1000px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- 表格 ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06);white-space:nowrap}
+th{
+  background:rgba(255,255,255,.05);color:var(--gold2);font-weight:600;font-size:12.5px;
+  letter-spacing:.6px;position:sticky;top:0;z-index:2;backdrop-filter:blur(6px);
+}
+tbody tr:hover{background:rgba(230,192,124,.055)}
+tbody tr:last-child td{border-bottom:0}
+td.wrap,th.wrap{white-space:normal;min-width:220px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#cfc7ee}
+.sym{font-size:16px;line-height:1;margin-right:5px}
+
+/* 元素色 */
+.e-fire{color:var(--fire)} .e-earth{color:var(--earth)} .e-air{color:var(--air)} .e-water{color:var(--water)}
+.chip{
+  display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:999px;
+  border:1px solid var(--line2);color:var(--muted);background:rgba(255,255,255,.03);margin:1px 2px 1px 0;
+  white-space:nowrap;
+}
+.chip.fire{border-color:rgba(255,115,97,.45);color:#ffb3a8;background:rgba(255,115,97,.10)}
+.chip.earth{border-color:rgba(216,163,95,.45);color:#f0cf9f;background:rgba(216,163,95,.10)}
+.chip.air{border-color:rgba(99,213,198,.45);color:#a6f0e6;background:rgba(99,213,198,.10)}
+.chip.water{border-color:rgba(111,168,255,.45);color:#b6d2ff;background:rgba(111,168,255,.10)}
+.chip.gold{border-color:rgba(230,192,124,.5);color:var(--gold2);background:rgba(230,192,124,.10)}
+
+/* ---------- 星座卡 ---------- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.filters button{
+  font:inherit;font-size:13px;cursor:pointer;color:var(--muted);background:var(--panel);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;transition:.18s;
+}
+.filters button:hover{color:var(--text);border-color:var(--line2)}
+.filters button.on{color:#12101c;background:linear-gradient(120deg,var(--gold2),var(--gold));border-color:transparent;font-weight:700}
+
+.sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(358px,1fr));gap:18px}
+.sc{
+  position:relative;background:linear-gradient(170deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  border:1px solid var(--line);border-radius:18px;padding:20px 20px 16px;overflow:hidden;
+  transition:.25s;
+}
+.sc:hover{border-color:rgba(230,192,124,.42);transform:translateY(-3px);box-shadow:0 18px 44px -22px rgba(0,0,0,.9)}
+.sc::after{
+  content:attr(data-glyph);position:absolute;right:-6px;top:-30px;font-size:132px;line-height:1;
+  opacity:.075;pointer-events:none;
+}
+.sc-h{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sc-h .g{font-size:26px;line-height:1;filter:drop-shadow(0 0 10px rgba(230,192,124,.35))}
+.sc-h .n{font-size:19px;font-weight:800;letter-spacing:1px}
+.sc-h .d{font-size:12px;color:var(--dim);margin-left:auto;font-family:ui-monospace,monospace}
+.sc-meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+.sc blockquote{
+  margin:0 0 12px;padding:9px 12px;border-left:2px solid rgba(230,192,124,.55);
+  background:rgba(230,192,124,.06);border-radius:0 10px 10px 0;color:#ded9f0;font-size:13.5px;
+}
+.sc .row{display:flex;gap:9px;margin-bottom:9px;align-items:flex-start}
+.sc .row .lab{
+  flex:none;width:52px;font-size:12px;color:var(--gold);letter-spacing:1px;
+  border-right:1px solid var(--line);padding-right:8px;line-height:1.6;
+}
+.sc .row .val{font-size:13.5px;color:#d6d2e6}
+.sc .wux{
+  margin-top:12px;padding:11px 12px;border-radius:12px;font-size:13px;color:#d9d4ea;
+  background:linear-gradient(120deg,rgba(111,168,255,.10),rgba(165,139,236,.10));
+  border:1px solid rgba(165,139,236,.22);
+}
+.sc .wux b{color:var(--gold2);font-weight:700}
+.fortune{margin-top:14px;border-top:1px dashed var(--line2);padding-top:10px}
+.fortune .ft-h{font-size:12px;color:var(--dim);letter-spacing:1.5px;margin-bottom:6px}
+.fitem{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.045);align-items:start}
+.fitem:last-child{border-bottom:0}
+.fdate{font-family:ui-monospace,monospace;font-size:12px;color:var(--gold);padding-top:1px}
+.fbody .stars{font-size:11px;letter-spacing:1px;color:var(--gold);display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.fbody .stars i{font-style:normal;color:var(--dim)}
+.fbody .stars em{font-style:normal;color:#7d7799;font-size:10.5px;letter-spacing:.5px}
+.fbody .txt{font-size:13px;color:#cdc8de}
+
+/* ---------- 星盘 ---------- */
+.wheel-wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:22px;align-items:start}
+@media(max-width:900px){.wheel-wrap{grid-template-columns:1fr}}
+.wheel-box{
+  position:relative;background:radial-gradient(circle at 50% 45%,rgba(60,45,110,.45),rgba(8,8,18,.9) 70%);
+  border:1px solid var(--line2);border-radius:20px;padding:10px;
+}
+svg.wheel{display:block;width:100%;height:auto}
+.toggle{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.toggle button{
+  font:inherit;font-size:12.5px;cursor:pointer;padding:5px 12px;border-radius:999px;
+  background:var(--panel);border:1px solid var(--line);color:var(--muted);
+}
+.toggle button.on{color:#12101c;background:linear-gradient(120deg,var(--gold2),var(--gold));border-color:transparent;font-weight:700}
+
+/* ---------- 表单 ---------- */
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:520px){.form{grid-template-columns:1fr}}
+.field label{display:block;font-size:12px;color:var(--dim);letter-spacing:.8px;margin-bottom:4px}
+.field input,.field select{
+  width:100%;font:inherit;font-size:14px;color:var(--text);background:rgba(255,255,255,.06);
+  border:1px solid var(--line2);border-radius:10px;padding:9px 11px;outline:none;
+}
+.field input:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,192,124,.14)}
+.field select option{background:#12101c;color:#ece9f6}
+.btn{
+  font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;border:0;border-radius:12px;
+  padding:11px 22px;color:#12101c;background:linear-gradient(120deg,var(--gold2),var(--gold));
+  box-shadow:0 10px 26px -12px rgba(230,192,124,.75);transition:.18s;
+}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.btn.ghost{background:var(--panel);color:var(--text);border:1px solid var(--line2);box-shadow:none}
+.result{margin-top:16px;display:grid;gap:10px}
+.rbox{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;
+  background:linear-gradient(120deg,rgba(230,192,124,.10),rgba(165,139,236,.09));
+  border:1px solid rgba(230,192,124,.25);
+}
+.rbox .k{font-size:12px;color:var(--gold);letter-spacing:1px;width:64px;flex:none}
+.rbox .v{font-size:17px;font-weight:800;letter-spacing:.5px}
+.rbox .s{font-size:12.5px;color:var(--muted);margin-left:auto;text-align:right}
+.note{font-size:12.5px;color:var(--dim);line-height:1.7}
+.hr{height:1px;background:var(--line);margin:22px 0}
+
+/* ---------- 五行条 ---------- */
+.wxbar{display:grid;grid-template-columns:52px 1fr 46px;gap:10px;align-items:center;margin:7px 0;font-size:13px}
+.wxbar .track{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.wxbar .fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.wxbar .num{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);text-align:right}
+
+/* ---------- 宫位网格 ---------- */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:12px}
+.hcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;transition:.2s}
+.hcard:hover{border-color:rgba(230,192,124,.35);background:var(--panel2)}
+.hcard .hn{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--gold);letter-spacing:1.5px}
+.hcard .ht{font-size:15.5px;font-weight:700;margin:1px 0 5px}
+.hcard .hd{font-size:13px;color:#c8c3db}
+.hcard .hm{font-size:11.5px;color:var(--dim);margin-top:7px}
+
+footer{border-top:1px solid var(--line);margin-top:70px;padding:26px 0 10px;color:var(--dim);font-size:12.5px}
+footer .fi{max-width:1240px;margin:0 auto;padding:0 22px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin:10px 0 0}
+.legend b{color:var(--muted);font-weight:600}
+@media print{header.top,nav.links,.toggle,.filters{display:none}body{background:#fff;color:#111}body::before,#stars{display:none}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><span class="orb"></span>星座全解 · 2026.11</div>
+    <nav class="links">
+      <a href="#sky">01 这三天天空</a>
+      <a href="#wheel">02 星盘</a>
+      <a href="#table">03 总表</a>
+      <a href="#signs">04 十二星座</a>
+      <a href="#asc">05 上升</a>
+      <a href="#wuxing">06 五行</a>
+      <a href="#houses">07 宫位</a>
+      <a href="#howto">08 读盘</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="kicker">SUN IN SCORPIO · MOON AQUARIUS → PISCES</div>
+  <h1>十二星座 · 三日运势 · 全盘解读</h1>
+  <p class="lead">
+    性格、爱情、事业方向、上升星座、五行属性与特征、对应宫位与天干 —— 一张表看懂。
+    三日运势不是套话：它按 2026 年 11 月 16–18 日的真实行运逐条推出来（火星合木星狮子 26°、太阳天蝎刑火木、金星天秤停滞转顺、月亮入双鱼），
+    下面第一节就是这组天象的原始数据，可自行核对。
+  </p>
+  <div class="winbar">
+    <div><b>11.16 周一</b><span>月水瓶 11°</span></div>
+    <div><b>11.17 周二</b><span>月水瓶 23°</span></div>
+    <div><b>11.18 周三</b><span>月入双鱼 02:24</span></div>
+    <div><b>太阳</b><span>天蝎 23°48′ → 25°49′</span></div>
+  </div>
+</div>
+
+<!-- ================= 01 天象 ================= -->
+<section id="sky">
+  <div class="sec-head"><span class="sec-num">01</span><h2>这三天天空在干什么</h2></div>
+  <p class="sec-sub">
+    下表由页面内的星历算法实时计算（Schlyter 低精度轨道根数 + 月球主要摄动项，误差约 1′–3′ 量级；冥王星为近似值）。
+    地点基准：北京时间 12:00（东经 120°）。
+  </p>
+
+  <div class="tw" style="margin-bottom:16px">
+    <table id="eph-table">
+      <thead><tr><th>天体</th><th>11.16</th><th>11.17</th><th>11.18</th><th>日速</th><th>状态</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="grid g4" id="aspects"></div>
+
+  <h3>这组天象怎么读</h3>
+  <div class="card">
+    <p><b style="color:var(--gold2)">火星合木星 · 狮子座 26°（11.16 入相，误差 3′）</b>——本轮最硬的一个点。火星是「动手」，木星是「放大」，两者在狮子（表演、孩子、恋爱、创作、赌性）合相，等于把「想做就做」调到最大档。这天适合发布、路演、面试、官宣、下决心；副作用是过度自信、场面铺太大、脾气一点就着。</p>
+    <p><b style="color:var(--gold2)">太阳天蝎 24°–26° 刑（90°）火星木星</b>——自我意志与「表现欲／行动派」正面顶牛。这三天很多人的真实感受是：明明想稳，偏偏有人（或自己）要冲。摩擦点集中在 11.16 晚到 11.17。</p>
+    <p><b style="color:var(--gold2)">金星天秤 23° 停滞转顺（日速 ≈ 0.07°/天）</b>——金星刚从逆行里转出来，几乎原地不动。恋爱、审美、金钱、合作这几件事都在「慢速重审」：旧情复燃、旧账重提、旧关系重新定价，都在这一段。别急着定论，11 月下旬金星恢复常速后再拍板。</p>
+    <p><b style="color:var(--gold2)">月亮 水瓶 → 双鱼（11.18 约 02:24 换座）</b>——16、17 日情绪偏理性、抽离、需要「人以外」的空间（朋友、社群、网络）；18 日一入双鱼，情绪立刻变软变黏，直觉、怀旧、想一个人待着、容易被氛围带走。月亮 18 日刑天王星（双子 4°），当天的变数是突然的、来自消息面的。</p>
+    <p><b style="color:var(--gold2)">土星白羊 8° / 天王双子 4° / 海王白羊 2°</b>——长线背景：老规则在被重写（土星白羊）、信息与交通在翻新（天王双子）、共识在雾化（海王白羊）。三天的短期波动都挂在这层底色上。</p>
+  </div>
+</section>
+
+<!-- ================= 02 星盘 ================= -->
+<section id="wheel">
+  <div class="sec-head"><span class="sec-num">02</span><h2>星盘长什么样</h2></div>
+  <p class="sec-sub">
+    左边是真实的盘面：外环 12 星座，内圈 12 宫，行星按实际黄经落位。点右上角切换到「今日天象盘」或「我的出生盘」——
+    出生盘会按你填的日期时间地点算太阳、月亮、上升、中天，并重画整张盘。
+  </p>
+  <div class="wheel-wrap">
+    <div>
+      <div class="toggle">
+        <button id="btn-transit" class="on">今日天象盘 · 11.16 12:00</button>
+        <button id="btn-natal">我的出生盘</button>
+      </div>
+      <div class="wheel-box"><svg class="wheel" id="chart" viewBox="-16 -16 772 772" aria-label="星盘"></svg></div>
+      <div class="legend">
+        <span><b>ASC</b> 上升（东方地平）</span><span><b>DSC</b> 下降</span><span><b>MC</b> 中天</span><span><b>IC</b> 天底</span>
+      </div>
+    </div>
+    <div>
+      <div class="card" id="wheel-info"></div>
+      <h3>盘上一共有什么</h3>
+      <div class="tw">
+        <table style="min-width:0">
+          <thead><tr><th>部件</th><th class="wrap">含义</th></tr></thead>
+          <tbody>
+            <tr><td>太阳 ☉</td><td class="wrap">核心身份、意志方向、你「想成为谁」。星座决定外壳性格，宫位决定主场领域。</td></tr>
+            <tr><td>月亮 ☽</td><td class="wrap">情绪反应、安全感来源、私下的样子。月亮星座往往比太阳更像「真实的你」。</td></tr>
+            <tr><td>水星 ☿</td><td class="wrap">说话、思考、学习、交易方式。逆行时最容易被甩锅的那颗。</td></tr>
+            <tr><td>金星 ♀</td><td class="wrap">爱与审美、给什么打高分、钱怎么花。</td></tr>
+            <tr><td>火星 ♂</td><td class="wrap">行动力、怒气、性、竞争方式。</td></tr>
+            <tr><td>木星 ♃</td><td class="wrap">扩张、运气、信念、你在哪块容易「变大」。</td></tr>
+            <tr><td>土星 ♄</td><td class="wrap">压力、边界、责任、迟到但必到的功课。</td></tr>
+            <tr><td>天王 ♅</td><td class="wrap">突变、反叛、天赋式的怪。</td></tr>
+            <tr><td>海王 ♆</td><td class="wrap">幻想、共情、成瘾与灵感，同一枚硬币。</td></tr>
+            <tr><td>冥王 ♇</td><td class="wrap">权力、执念、毁灭式重生。</td></tr>
+            <tr><td>相位</td><td class="wrap">合 0°／六合 60°／刑 90°／拱 120°／冲 180°；容许度常用 6°–8°，日月可放到 10°。</td></tr>
+            <tr><td>宫位制</td><td class="wrap">常用 Placidus（普拉西度）／Koch；等宫制（Equal）简单粗暴但稳。本页轮盘用等宫制从上升起算。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 总表 ================= -->
+<section id="table">
+  <div class="sec-head"><span class="sec-num">03</span><h2>十二星座一张总表</h2></div>
+  <p class="sec-sub">元素 / 模式 / 守护星 / 对应宫位 / 节气地支 / 天干 / 五行，一眼扫完。下面第四节逐个展开。</p>
+  <div class="tw">
+    <table id="sum-table">
+      <thead><tr>
+        <th>星座</th><th>日期</th><th>元素</th><th>模式</th><th>守护星</th>
+        <th>宫位</th><th>地支</th><th>天干</th><th>五行</th><th class="wrap">一句话</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= 04 星座详解 ================= -->
+<section id="signs">
+  <div class="sec-head"><span class="sec-num">04</span><h2>十二星座逐个拆</h2></div>
+  <p class="sec-sub">
+    每张卡：性格 → 爱情 → 事业方向 → 五行特征 → 三天运势（星级为横向对比，不是绝对值）。
+    三日运势按「行运星落你第几宫」推，同一组天象对不同星座的落点完全不同，所以别拿别人的结论套自己。
+  </p>
+  <div class="filters" id="filters">
+    <button data-el="all" class="on">全部</button>
+    <button data-el="fire">火象</button>
+    <button data-el="earth">土象</button>
+    <button data-el="air">风象</button>
+    <button data-el="water">水象</button>
+  </div>
+  <div class="sign-grid" id="sign-grid"></div>
+</section>
+
+<!-- ================= 05 上升 ================= -->
+<section id="asc">
+  <div class="sec-head"><span class="sec-num">05</span><h2>上升星座：算出你自己的</h2></div>
+  <p class="sec-sub">
+    上升星座 = 你出生那一刻，东方地平线正升起的黄道度数。它每 4 分钟走 1°，约 2 小时换一个星座，
+    所以必须知道<b>精确到分钟的出生时间</b>＋<b>出生地经纬度</b>。差 10 分钟，就可能差一个上升。
+  </p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">上升 / 太阳 / 月亮 计算器</h3>
+      <div class="form">
+        <div class="field"><label>出生日期</label><input type="date" id="f-date" value="2004-03-21"></div>
+        <div class="field"><label>出生时间（当地钟表时间）</label><input type="time" id="f-time" value="08:00"></div>
+        <div class="field"><label>出生城市</label>
+          <select id="f-city">
+            <option value="116.41,39.90">北京 116.41E / 39.90N</option>
+            <option value="121.47,31.23">上海 121.47E / 31.23N</option>
+            <option value="113.26,23.13">广州 113.26E / 23.13N</option>
+            <option value="114.07,22.55">深圳 114.07E / 22.55N</option>
+            <option value="104.07,30.57">成都 104.07E / 30.57N</option>
+            <option value="108.95,34.27">西安 108.95E / 34.27N</option>
+            <option value="126.53,45.80">哈尔滨 126.53E / 45.80N</option>
+            <option value="87.62,43.83">乌鲁木齐 87.62E / 43.83N</option>
+            <option value="120.20,30.27">杭州 120.20E / 30.27N</option>
+            <option value="118.09,24.48">厦门 118.09E / 24.48N</option>
+            <option value="114.17,22.32">香港 114.17E / 22.32N</option>
+            <option value="121.57,25.03">台北 121.57E / 25.03N</option>
+            <option value="custom">自定义经纬度…</option>
+          </select>
+        </div>
+        <div class="field"><label>时区（东八区填 8）</label><input type="number" id="f-tz" value="8" step="0.5" min="-12" max="14"></div>
+        <div class="field"><label>经度 E（东正西负）</label><input type="number" id="f-lon" value="116.41" step="0.01"></div>
+        <div class="field"><label>纬度 N（北正南负）</label><input type="number" id="f-lat" value="39.90" step="0.01"></div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="btn-calc">计算我的星盘</button>
+        <button class="btn ghost" id="btn-now">用当前时间试一下</button>
+      </div>
+      <div class="result" id="calc-result"></div>
+      <p class="note" style="margin-top:12px">
+        算法：JD → 恒星时 → RAMC → 上升黄经 atan2(cos RAMC, −(sin RAMC·cos ε + tan φ·sin ε))；
+        太阳月亮用低精度轨道根数（误差 &lt; 0.01°）；中天用 atan2(sin RAMC, cos RAMC·cos ε)。
+        出生在中国大陆 1986–1991 年夏令时期间，请把钟表时间减 1 小时再填。
+      </p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">十二上升 · 别人第一眼看到的你</h3>
+      <div class="tw" style="border:0;background:transparent">
+        <table style="min-width:0" id="asc-table">
+          <thead><tr><th>上升</th><th class="wrap">外在气质 / 第一印象 / 命主星</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:12px">
+        口诀：<b>太阳是「我是谁」，月亮是「我怎么感受」，上升是「别人以为我是谁」</b>。三者不一致很正常——那不是虚伪，是层次。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 五行 ================= -->
+<section id="wuxing">
+  <div class="sec-head"><span class="sec-num">06</span><h2>五行属性与特征分析</h2></div>
+  <p class="sec-sub">
+    这里有两套独立系统，别混着用：<br>
+    ① <b>元素 → 五行</b>（西洋四元素映射）：火象→火、土象→土、风象→木（风生于木，主疏泄流通）、水象→水。缺的那一「金」由天干补上。<br>
+    ② <b>星座起点所在节气月 → 地支 → 藏干本气 → 天干 → 五行</b>（中国命理口径）。例：白羊座始于春分，落在卯月，卯的本气是乙木 → 白羊的天干是「乙」。
+  </p>
+
+  <div class="grid g4" style="margin-bottom:16px" id="wx-summary"></div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table id="wx-table">
+      <thead><tr>
+        <th>星座</th><th>元素五行</th><th>天干</th><th>天干五行</th><th>生克关系</th><th>主导</th><th class="wrap">五行特征</th><th class="wrap">失衡表现 → 调理</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">五行的相生相克（速记）</h3>
+      <p><b style="color:var(--gold2)">相生</b>：木生火 → 火生土 → 土生金 → 金生水 → 水生木。<br>
+      对应到星座：<b>风助火</b>（双子/天秤/水瓶点火象）、<b>火成土</b>（热情沉淀成结果）、<b>土出金</b>（秩序产出标准）、<b>金生水</b>（规则滋养情感）、<b>水养木</b>（情绪长出想法）。</p>
+      <p><b style="color:var(--pink)">相克</b>：木克土 → 土克水 → 水克火 → 火克金 → 金克木。<br>
+      对应到关系：<b>风象克土象</b>（想法总在拆流程）、<b>土象克水象</b>（现实压住情绪）、<b>水象克火象</b>（敏感浇灭冲动）、<b>火象克风象的落地性</b>、<b>金（天干属金的处女/天秤）克木（风象）</b>——所以处女和双子、天秤和水瓶之间，天生有一层「审美 vs 逻辑」的摩擦。</p>
+      <p class="note">用法：不是判吉凶，是找「缺什么」。木火旺而不见水 → 燥；土金重而不见木 → 滞；水多无土 → 泛；火多无金 → 散。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">十天干 × 星座对照（可直接背）</h3>
+      <div class="tw" style="border:0;background:transparent">
+        <table style="min-width:0">
+          <thead><tr><th>天干</th><th>五行</th><th>对应星座</th><th class="wrap">气质关键词</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">甲</td><td>阳木</td><td>双鱼</td><td class="wrap">大树：向上、庇护、慢性子但根深</td></tr>
+            <tr><td class="mono">乙</td><td>阴木</td><td>白羊</td><td class="wrap">花草藤蔓：钻缝、柔中带韧、来得快</td></tr>
+            <tr><td class="mono">丙</td><td>阳火</td><td>双子</td><td class="wrap">太阳之火：照得广、话多、热度不持久</td></tr>
+            <tr><td class="mono">丁</td><td>阴火</td><td>巨蟹</td><td class="wrap">灯烛之火：暖、专注、护着一小圈人</td></tr>
+            <tr><td class="mono">戊</td><td>阳土</td><td>金牛 / 天蝎</td><td class="wrap">城墙之土：厚重、能扛、不易撼动</td></tr>
+            <tr><td class="mono">己</td><td>阴土</td><td>狮子 / 水瓶</td><td class="wrap">田园之土：可耕、有耐心、养人也养事</td></tr>
+            <tr><td class="mono">庚</td><td>阳金</td><td>处女</td><td class="wrap">刀剑之金：锋利、标准、斩得干净</td></tr>
+            <tr><td class="mono">辛</td><td>阴金</td><td>天秤</td><td class="wrap">珠玉之金：精致、贵气、怕磕碰</td></tr>
+            <tr><td class="mono">壬</td><td>阳水</td><td>射手</td><td class="wrap">江河之水：奔流、远行、不受拘</td></tr>
+            <tr><td class="mono">癸</td><td>阴水</td><td>摩羯</td><td class="wrap">雨露之水：渗透、隐忍、慢慢积</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 宫位 ================= -->
+<section id="houses">
+  <div class="sec-head"><span class="sec-num">07</span><h2>十二宫位 · 每个星座的「主场」</h2></div>
+  <p class="sec-sub">
+    星座是「怎么做事」，宫位是「在哪做事」。白羊天然对应第 1 宫、金牛第 2 宫……双鱼第 12 宫，这叫<b>先天宫位</b>。
+    但真正看盘时，要看<b>你的上升</b>落在哪：上升白羊的人，1 宫在白羊；上升巨蟹的人，1 宫在巨蟹、白羊就是 10 宫。所以同一个太阳星座，主场完全不同。
+  </p>
+  <div class="hgrid" id="house-grid"></div>
+</section>
+
+<!-- ================= 08 读盘 ================= -->
+<section id="howto">
+  <div class="sec-head"><span class="sec-num">08</span><h2>拿到一张盘，按这个顺序读</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">六步法</h3>
+      <p><b>1. 看上升</b>——定整张盘的框架（1 宫星座＝你的默认应对方式，命主星落在哪一宫＝命门的指向）。</p>
+      <p><b>2. 看太阳星座＋宫位</b>——你的人生主战场。太阳在第 10 宫的人，事业就是身份；在第 4 宫的人，家就是身份。</p>
+      <p><b>3. 看月亮</b>——情绪底层。月亮落水象＋第 8 宫，情绪深且不说；月亮落风象＋第 11 宫，靠朋友和「想明白」消化。</p>
+      <p><b>4. 找相位最密的行星</b>——被三颗以上行星围住的那颗，是盘上的「主承重墙」，它是什么星，你的人生主题就是什么。</p>
+      <p><b>5. 看宫主星串联</b>——1 宫主星飞 7 宫＝人生靠关系推动；10 宫主星落 2 宫＝名声换钱；这类链条才是真正的断语来源。</p>
+      <p><b>6. 最后看行运</b>——流年土星压哪一宫，那一宫的事就是要交作业的地方；流年木星进哪一宫，那一宫会「变大」。本页三日运势走的正是这一步。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">这套东西的边界（老实说）</h3>
+      <p>· <b>能说准的</b>：性格倾向、反应模式、关系里的惯性、适合的行业气质、某段时间的注意力重心。</p>
+      <p>· <b>说不准的</b>：具体事件、具体金额、具体人名、生死病灾。凡是把话说死到一个日期一件事的，都是在编。</p>
+      <p>· <b>三日运势怎么用</b>：当「注意力提示」而不是「判决书」。看到「今天适合发布」，意思是今天你更敢做、场面更容易做大，不是说今天发布一定成。</p>
+      <p>· <b>上升时间误差</b>：4 分钟差 1°，出生时间如果有 ±30 分钟误差，上升星座可能整个偏一格。这种情况看太阳和月亮更靠谱。</p>
+      <p class="note">星历计算与页面内所有数据均可复算；运势部分是解释层，不是数据层。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fi">
+    <div>星座全解 · 三日运势 2026.11.16–11.18 · 行运数据由页面内置星历实时计算</div>
+    <div>生成时间：<span id="stamp"></span></div>
+  </div>
+</footer>
+</main>
+
+<script>
+/* ============================================================
+   0. 工具
+   ============================================================ */
+var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+function rev(x){ return ((x % 360) + 360) % 360; }
+function sind(x){ return Math.sin(x * D2R); }
+function cosd(x){ return Math.cos(x * D2R); }
+function tan(x){ return Math.tan(x * D2R); }
+function atan2d(y, x){ return Math.atan2(y, x) * R2D; }
+function pad(n, w){ n = String(n); while (n.length < w) n = '0' + n; return n; }
+function el(tag, cls, html){
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+/* ============================================================
+   1. 星历（Schlyter 低精度轨道根数 + 月球主要摄动）
+   ============================================================ */
+function dCalc(y, m, day, ut){
+  var d = 367 * y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4)
+        + Math.floor(275 * m / 9) + day - 730530;
+  return d + ut / 24;
+}
+
+function sunPos(d){
+  var w = 282.9404 + 4.70935e-5 * d;
+  var e = 0.016709 - 1.151e-9 * d;
+  var M = rev(356.0470 + 0.9856002585 * d);
+  var E = M + R2D * e * sind(M) * (1 + e * cosd(M));
+  var xv = cosd(E) - e, yv = Math.sqrt(1 - e * e) * sind(E);
+  var v = atan2d(yv, xv), r = Math.hypot(xv, yv);
+  return { lon: rev(v + w), r: r };
+}
+
+function moonPos(d){
+  var N = 125.1228 - 0.0529538083 * d, i = 5.1454;
+  var w = 318.0634 + 0.1643573223 * d, a = 60.2666, e = 0.054900;
+  var M = rev(115.3654 + 13.0649929509 * d);
+  var E = M + R2D * e * sind(M) * (1 + e * cosd(M));
+  for (var k = 0; k < 6; k++){
+    E = E - (E - R2D * e * sind(E) - M) / (1 - e * cosd(E));
+  }
+  var xv = a * (cosd(E) - e), yv = a * Math.sqrt(1 - e * e) * sind(E);
+  var v = atan2d(yv, xv), r = Math.hypot(xv, yv);
+  var xh = r * (cosd(N) * cosd(v + w) - sind(N) * sind(v + w) * cosd(i));
+  var yh = r * (sind(N) * cosd(v + w) + cosd(N) * sind(v + w) * cosd(i));
+  var zh = r * (sind(v + w) * sind(i));
+  var lon = atan2d(yh, xh), lat = atan2d(zh, Math.hypot(xh, yh));
+  var Lm = rev(N + w + M), sunlon = sunPos(d).lon;
+  var D_ = rev(Lm - sunlon), Ms = rev(356.0470 + 0.9856002585 * d);
+  var Mm = rev(M), F = rev(Lm - N);
+  lon += (-1.274 * sind(2 * D_ - Mm) + 0.658 * sind(2 * D_)
+        - 0.186 * sind(Ms) - 0.059 * sind(2 * D_ - 2 * Mm)
+        - 0.057 * sind(2 * D_ - Ms - Mm) + 0.053 * sind(2 * D_ + Mm)
+        + 0.046 * sind(2 * D_ - Ms) + 0.041 * sind(Mm - Ms)
+        - 0.035 * sind(D_) - 0.031 * sind(Mm + Ms)
+        - 0.015 * sind(2 * F - 2 * D_) + 0.011 * sind(Mm - 4 * D_));
+  return { lon: rev(lon), lat: lat };
+}
+
+var ELEM = {
+  Mercury:[48.3313,3.24587e-5, 7.0047,5.00e-8, 29.1241,1.01444e-5, 0.387098,0, 0.205635,5.59e-10, 168.6562,4.0923344368],
+  Venus:  [76.6799,2.46590e-5, 3.3946,2.75e-8,  54.8910,1.38374e-5, 0.723330,0, 0.006773,-1.302e-9, 48.0052,1.6021302244],
+  Mars:   [49.5574,2.11081e-5, 1.8497,-1.78e-8, 286.5016,2.92961e-5, 1.523688,0, 0.093405,2.516e-9, 18.6021,0.5240207766],
+  Jupiter:[100.4542,2.76854e-5, 1.3030,-1.557e-7, 273.8777,1.64505e-5, 5.20256,0, 0.048498,4.469e-9, 19.8950,0.0830853001],
+  Saturn: [113.6634,2.38980e-5, 2.4886,-1.081e-7, 339.3939,2.97661e-5, 9.55475,0, 0.055546,-9.499e-9, 316.9670,0.0334442282],
+  Uranus: [74.0005,1.3978e-5, 0.7733,1.9e-8, 96.6612,3.0565e-5, 19.18171,-1.55e-8, 0.047318,7.45e-9, 142.5905,0.011725806],
+  Neptune:[131.7806,3.0173e-5, 1.7700,-2.55e-7, 272.8461,-6.027e-6, 30.05826,3.313e-8, 0.008606,2.15e-9, 260.2471,0.005995147]
+};
+
+function helio(name, d){
+  var E0 = ELEM[name];
+  var N = E0[0] + E0[1] * d, inc = E0[2] + E0[3] * d;
+  var w = E0[4] + E0[5] * d, a = E0[6] + E0[7] * d;
+  var e = E0[8] + E0[9] * d, M = rev(E0[10] + E0[11] * d);
+  var E = M + R2D * e * sind(M) * (1 + e * cosd(M));
+  for (var k = 0; k < 8; k++){
+    E = E - (E - R2D * e * sind(E) - M) / (1 - e * cosd(E));
+  }
+  var xv = a * (cosd(E) - e), yv = a * Math.sqrt(1 - e * e) * sind(E);
+  var v = atan2d(yv, xv), r = Math.hypot(xv, yv);
+  var xh = r * (cosd(N) * cosd(v + w) - sind(N) * sind(v + w) * cosd(inc));
+  var yh = r * (sind(N) * cosd(v + w) + cosd(N) * sind(v + w) * cosd(inc));
+  var zh = r * (sind(v + w) * sind(inc));
+  return { x: xh, y: yh, z: zh };
+}
+
+function geoLon(name, d){
+  var s = sunPos(d);
+  var xs = s.r * cosd(s.lon), ys = s.r * sind(s.lon);
+  var h = helio(name, d);
+  return rev(atan2d(h.y + ys, h.x + xs));
+}
+
+/* 全部天体黄经：t = {y,m,d,h,mi,tz} */
+function bodiesAt(t){
+  var ut = t.h + t.mi / 60 - t.tz;
+  var dd = dCalc(t.y, t.m, t.d, ut);
+  var out = [];
+  out.push({ k:'Sun',     g:'☉', zh:'太阳', lon: sunPos(dd).lon });
+  out.push({ k:'Moon',    g:'☽', zh:'月亮', lon: moonPos(dd).lon });
+  var order = [['Mercury','☿','水星'],['Venus','♀','金星'],['Mars','♂','火星'],
+               ['Jupiter','♃','木星'],['Saturn','♄','土星'],['Uranus','♅','天王星'],
+               ['Neptune','♆','海王星']];
+  for (var i = 0; i < order.length; i++){
+    out.push({ k: order[i][0], g: order[i][1], zh: order[i][2], lon: geoLon(order[i][0], dd) });
+  }
+  out.dd = dd;
+  return out;
+}
+
+/* 上升 / 中天 */
+function angles(t, lon, lat){
+  var ut = t.h + t.mi / 60 - t.tz;
+  var Y = t.y, M = t.m;
+  if (M <= 2){ Y -= 1; M += 12; }
+  var A = Math.floor(Y / 100), B = 2 - A + Math.floor(A / 4);
+  var jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1))
+         + t.d + B - 1524.5 + ut / 24;
+  var T = (jd - 2451545.0) / 36525;
+  var gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0)
+           + 0.000387933 * T * T - T * T * T / 38710000;
+  var ramc = rev(gmst + lon);
+  var eps = 23.4392911 - 0.0130042 * T;
+  var asc = rev(atan2d(cosd(ramc), -(sind(ramc) * cosd(eps) + tan(lat) * sind(eps))));
+  var mc  = rev(atan2d(sind(ramc), cosd(ramc) * cosd(eps)));
+  return { jd: jd, ramc: ramc, eps: eps, asc: asc, mc: mc };
+}
+
+/* ============================================================
+   2. 十二星座数据
+   ============================================================ */
+var SIGNS = [
+{
+ zh:'白羊座', en:'Aries', glyph:'♈', date:'3.21–4.19', el:'fire', elName:'火', mode:'基本',
+ ruler:'火星', house:1, houseName:'命宫', branch:'卯', stem:'乙', stemEl:'木',
+ kw:['开创','直接','不耐等','好胜'],
+ tag:'先冲再想，热血即正义',
+ persona:'想到就做，等待对白羊是刑罚。情绪来得快去得也快，不记仇，但记得「谁挡过我」。扛得住硬仗，扛不住无聊。',
+ love:'追人的时候火力全开，追到手容易失速；喜欢有挑战感、能一起折腾的对象，最烦对方冷处理。吵架当场炸完当场翻篇，拿冷战治白羊是反向操作。',
+ career:'要「立刻看到结果」的岗位：销售／BD、创业、军警消防、体育教练、急诊与外科、赛事与活动策划、主播与电竞。最不适合长期坐班做重复校验。',
+ wx:'元素属火，天干乙木，木生火——「木火通明」，双重生发之力。启动极快、耐力一般，最缺金水来收（规则与冷静）。亢奋期容易上火、失眠、偏头痛，肝火旺；宜黑蓝色（水）压一压，别熬夜配咖啡。',
+ balance:'火过旺：暴脾气、说满话、透支体力 → 补金水：作息固定，找个处女／摩羯型的人当搭档',
+ days:[
+  {d:'11.16', z:4, a:4, c:3, t:'火木合相落在你的恋爱创作宫，油门踩到底：表白、发作品、拍板都挑今天。别在气头上签字。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月过人际宫与你的 5 宫火木对冲，「我说了算」撞上「大家一起玩」，群里别硬刚。'},
+  {d:'11.18', z:3, a:3, c:2, t:'月入 12 宫，收力的一天。补觉、收尾、别开新坑，灵感都从独处里来。'}
+ ]
+},
+{
+ zh:'金牛座', en:'Taurus', glyph:'♉', date:'4.20–5.20', el:'earth', elName:'土', mode:'固定',
+ ruler:'金星', house:2, houseName:'财帛宫', branch:'辰', stem:'戊', stemEl:'土',
+ kw:['稳','感官','占有','固执'],
+ tag:'慢，但从不后退',
+ persona:'表面温吞好说话，底线一旦划下就搬不动。对物质、触感、味道有本能判断力。不喜欢被催，一催就僵在原地。',
+ love:'认定得慢、投入得深，走了就很难回头。要的是可预期的陪伴和实际付出（一顿饭、一件礼物、一次接送），不是嘴上浪漫。被辜负会记很久。',
+ career:'直接跟「价值」挂钩的行业：财务／会计、餐饮与食品、农业、珠宝奢侈品、房产、音乐与声乐、长期资产配置。适合复利型工作，不适合快进快出。',
+ wx:'元素属土，天干戊土——土上加土，厚重能载。抗压强、盘子稳；土过旺则滞（拖延、固执、囤积）。需木疏土（风象的想法、绿色、东方），金来发用（把积累变成标准与产品）。',
+ balance:'土过旺：拖延、囤物、认死理 → 补木：接触新领域、断舍离、和多变的人共事',
+ days:[
+  {d:'11.16', z:4, a:4, c:3, t:'太阳在你 7 宫，谈判与伴侣是主战场；火木在 4 宫，家里的装修、搬家、家人事容易一次到位。'},
+  {d:'11.17', z:3, a:3, c:4, t:'月过 10 宫，你在台面上被看见：适合汇报、交付、让关键的人记住你的名字。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 11 宫刑你 2 宫的天王星：人情支出和冲动消费突然冒头，钱包看紧。'}
+ ]
+},
+{
+ zh:'双子座', en:'Gemini', glyph:'♊', date:'5.21–6.21', el:'air', elName:'风', mode:'变动',
+ ruler:'水星', house:3, houseName:'兄弟／沟通宫', branch:'巳', stem:'丙', stemEl:'火',
+ kw:['机变','好奇','传播','分心'],
+ tag:'脑子转得比嘴还快',
+ persona:'好奇心驱动型人格，能把任何话题聊下去，也能在任何话题上分心。学得快、丢得也快。讨厌被框死、被要求「只做一件事」。',
+ love:'先聊出感情再谈感情，聊天记录就是恋爱进度条。需要新鲜感和智力刺激，最怕对方无趣或控制欲。热度掉得快，但真动心会突然变得很黏。',
+ career:'靠信息差和表达吃饭：记者编辑、自媒体、翻译、主持、教师、销售、产品运营、物流调度、前端与脚本开发、活动执行。忌长期零交流的封闭岗。',
+ wx:'元素属风（映射为木），天干丙火——木生火，想法一生出来就往外烧。机变、传播力强；火无根则散（三分钟热度、话多耗气）。需土来收（落地流程）、水来济（深度）。',
+ balance:'发散过度：注意力碎片化、说话不过脑 → 补土：固定日程，答应了就先写下来',
+ days:[
+  {d:'11.16', z:4, a:4, c:3, t:'火木正压你 3 宫（沟通／短途），话说得又快又狠；金星 5 宫给恋爱和创作加糖。'},
+  {d:'11.17', z:4, a:3, c:4, t:'月过 9 宫，想跑、想学、想订票；这天你的说服力最强，谈判占优。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 10 宫刑你命宫的天王星：临时任务、上级变卦，留一手 B 方案。'}
+ ]
+},
+{
+ zh:'巨蟹座', en:'Cancer', glyph:'♋', date:'6.22–7.22', el:'water', elName:'水', mode:'基本',
+ ruler:'月亮', house:4, houseName:'田宅宫', branch:'午', stem:'丁', stemEl:'火',
+ kw:['护巢','共情','记忆','防御'],
+ tag:'壳很硬，里面全是软的',
+ persona:'情绪雷达极灵，别人一句话能琢磨三天。护人、护家、护旧物，记忆比谁都长。表面退让，内里极有主张，被逼到墙角会突然翻脸。',
+ love:'恋爱＝建窝。先看你会不会成为「家人」，再看心动不心动。付出极多但不明说，靠对方猜；猜不到就受伤，受伤就缩回壳里。最吃「被记得」这一套。',
+ career:'与照顾、滋养、归属相关：医疗护理、幼儿教育、母婴家政、餐饮、房产中介、心理辅导、HR、社区与公益。适合有「自己人」的团队，忌冷冰冰的纯 KPI 环境。',
+ wx:'元素属水，天干丁火——灯烛之火浮在水上，水火既济还是未济，全看配比。情感细密、守护力强；水火相激则内耗（想太多、反复咀嚼）。需木通关（表达出来、做点创作）。',
+ balance:'水火相激：内耗、胃与睡眠出问题 → 补木：把情绪写出来／做手工／养植物',
+ days:[
+  {d:'11.16', z:4, a:4, c:3, t:'太阳在你 5 宫，恋爱、子女、创作三线高光；火木在 2 宫，收入或大额支出有动作。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月过 8 宫，钱与信任的深水区。旧账别翻，翻了收不回。'},
+  {d:'11.18', z:4, a:3, c:3, t:'月入 9 宫与你的太阳成水象拱：远方的消息、考试、进修都顺。'}
+ ]
+},
+{
+ zh:'狮子座', en:'Leo', glyph:'♌', date:'7.23–8.22', el:'fire', elName:'火', mode:'固定',
+ ruler:'太阳', house:5, houseName:'子女／恋爱宫', branch:'未', stem:'己', stemEl:'土',
+ kw:['舞台','慷慨','自尊','护短'],
+ tag:'要么被看见，要么不算活过',
+ persona:'天生的舞台体质，气场自带三米光环。慷慨、护短、要面子，最受不了被当众轻视。自尊心既是发动机，也是刹车失灵点。',
+ love:'恋爱要高调、要仪式感、要被明确地选。给得起盛大的爱，也需要对方持续的注视；一旦觉得不被重视，会先演一场然后真的走。',
+ career:'需要「站在前面」的位置：演员导演、管理层、公关品牌、讲师、主持、奢侈品与高客单销售、创业。做幕后也能成，但心里会痒。',
+ wx:'元素属火，天干己土——火生土，把热情烧成实绩与权威，是十二星座里最能「把热情变现」的一组。土燥则僵（死要面子、听不进话），需水润（示弱、被照顾）。',
+ balance:'火土俱燥：固执、爱面子硬撑 → 补水：允许自己示弱，找水象朋友聊',
+ days:[
+  {d:'11.16', z:5, a:4, c:4, t:'火星合木星正压你命宫，全年最有存在感的一天。宜发布、面试、亮相、官宣。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月过 7 宫冲你命宫的火木：关系里有人跟你抢主导权，别硬顶，让一步反而赢。'},
+  {d:'11.18', z:3, a:3, c:4, t:'月入 8 宫，情绪进深水。适合收尾谈判、查账、把丑话说清。'}
+ ]
+},
+{
+ zh:'处女座', en:'Virgo', glyph:'♍', date:'8.23–9.22', el:'earth', elName:'土', mode:'变动',
+ ruler:'水星', house:6, houseName:'奴仆／健康宫', branch:'申', stem:'庚', stemEl:'金',
+ kw:['精确','服务','挑剔','效率'],
+ tag:'不是挑剔，是看得见',
+ persona:'眼睛自带放大镜，能看见别人看不见的那 5% 瑕疵。用「有用」定义自我价值，帮忙帮到过度。焦虑来自失控，控制来自流程。',
+ love:'用服务和细节表达爱：记住你的忌口、修好你的电脑、替你排好行程。嘴上不甜，行动很实。最怕对方邋遢、含糊、说话不算数。',
+ career:'靠专业度和标准化立足：医生药师、质检、数据分析、审计、编辑校对、测试与后端、营养师、行政与流程管理。各行各业的「把关人」。',
+ wx:'元素属土，天干庚金——土生金，从混沌里提炼标准与精度。锋利、干净、效率高；金过旺则刻薄（挑刺、内耗），需火炼（被认可、有热情）与水润（放松）。',
+ balance:'金过旺：挑剔、焦虑、肠胃敏感 → 补火水：接受「够好就行」，给自己留白',
+ days:[
+  {d:'11.16', z:3, a:3, c:4, t:'火木在你 12 宫，暗中发力：后台的事、憋着没说的计划，今天最容易推成。'},
+  {d:'11.17', z:3, a:3, c:4, t:'月过 6 宫，把身体和流程都盘一遍：体检、整理、优化清单，都值。'},
+  {d:'11.18', z:3, a:4, c:3, t:'月入 7 宫刑你 10 宫的天王星：合作方或上级临时变卦，合同留缓冲条款。'}
+ ]
+},
+{
+ zh:'天秤座', en:'Libra', glyph:'♎', date:'9.23–10.23', el:'air', elName:'风', mode:'基本',
+ ruler:'金星', house:7, houseName:'夫妻／合作宫', branch:'酉', stem:'辛', stemEl:'金',
+ kw:['审美','衡量','关系','犹疑'],
+ tag:'什么都懂，就是不想选',
+ persona:'天生的关系型选手，能精准读出场面上的每个人。审美在线、分寸感强、讨厌冲突。纠结不是没主见，是同时看见了每一边的合理性。',
+ love:'恋爱是主业。需要陪伴、需要好看的相处方式，也真的会为了关系妥协。最怕粗鲁、失控、不给面子；最容易被「懂分寸的温柔」拿下。',
+ career:'靠关系与美感变现：法务律师、HR、公关、设计、时尚、婚庆、商务谈判、外交、医美与形象顾问。忌单打独斗型岗位。',
+ wx:'元素属风（木），天干辛金——金克木，盘上自带一层张力：审美（辛金）不断修剪想法（风木）。所以天秤出高审美，也出选择困难。金木相战需水通关（水＝表达、情感流动）。',
+ balance:'金木相战：犹豫、怕得罪人、内耗 → 补水：先说自己要什么，再谈大家要什么',
+ days:[
+  {d:'11.16', z:5, a:4, c:3, t:'金星刚在你命宫由逆转顺，颜值气场一起回血；火木在 11 宫，社交局必到，人脉就是资源。'},
+  {d:'11.17', z:4, a:5, c:3, t:'月过 5 宫拱你的金星：这三天最会谈恋爱的一天，约会、告白、和好都挑今天。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 6 宫刑你 9 宫的天王星：行程、签证、文件容易出岔子，提前核一遍。'}
+ ]
+},
+{
+ zh:'天蝎座', en:'Scorpio', glyph:'♏', date:'10.24–11.22', el:'water', elName:'水', mode:'固定',
+ ruler:'火星／冥王', house:8, houseName:'疾厄／他人资源宫', branch:'戌', stem:'戊', stemEl:'土',
+ kw:['洞察','隐忍','掌控','极致'],
+ tag:'不说，但全都知道',
+ persona:'洞察力天花板，一眼看穿动机，只是不说。情绪浓度极高，外壳极静。极度忠诚，也极度记仇；被背叛一次，终身降级。',
+ love:'全有或全无，没有中间态。要的是灵魂级的深度与绝对忠诚，试探、考察、反复确认是常态。吃得住狠人，吃不住敷衍。',
+ career:'与「隐秘资源、深度调查、危机处理」相关：金融投资、审计稽查、刑警法医、心理治疗、保险与资管、尽调风控、研究型记者、医美。忌浅层社交型岗位。',
+ wx:'元素属水，天干戊土——水润土、土蓄水，一潭深不见底的蓄水池。渗透力与耐力都是顶级；土水相混易淤（执念、憋着不说）。需木疏（表达、创作、走出去）。',
+ balance:'水淤：钻牛角尖、身体发炎 → 补木：说出来、动起来、别一个人待着',
+ days:[
+  {d:'11.16', z:5, a:3, c:5, t:'日水双在你命宫，说话有分量；火木在 10 宫，事业被点燃——升职、项目、曝光，今天最适合出手。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月过 4 宫冲你 10 宫的火木：家、公司、自我三方拉扯，别在同一天得罪两头。'},
+  {d:'11.18', z:4, a:4, c:4, t:'月入 5 宫拱你的太阳：恋爱与创作回甜，适合把喜欢说出口。'}
+ ]
+},
+{
+ zh:'射手座', en:'Sagittarius', glyph:'♐', date:'11.23–12.21', el:'fire', elName:'火', mode:'变动',
+ ruler:'木星', house:9, houseName:'迁移／信仰宫', branch:'亥', stem:'壬', stemEl:'水',
+ kw:['远方','乐观','直率','不收'],
+ tag:'世界这么大，先走再说',
+ persona:'天生的理想主义者加乐观主义者，爱自由胜过爱安稳。说话直、心大、忘性也大。讨厌被规则捆、被小事缠。',
+ love:'恋爱像一场旅行：要有共同的目的地和笑点。追的时候热烈坦荡，被管住就想跑。最吃「你也有自己的世界」这种对象。',
+ career:'与远方、知识、信念相关：高校教师科研、旅游、外贸、出版、法律、跨境电商、体育、哲学宗教、留学移民服务。忌重复性与被微观管理。',
+ wx:'元素属火，天干壬水——水火相激，格局最大也最耗。想法远、能量足；火水未济则空转（计划多、落地少）。需土来承接（把远见变成项目）。',
+ balance:'水火相激：空转、大话、作息紊乱 → 补土：把目标切成月度任务',
+ days:[
+  {d:'11.16', z:4, a:3, c:4, t:'火木合相正落你 9 宫：远行、进修、出版、跨界合作的最佳窗口，今天就去谈。'},
+  {d:'11.17', z:4, a:3, c:4, t:'月过 3 宫：短途、考试、谈判都顺，说话有人听。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 4 宫刑你 7 宫的天王星：家里人或伴侣一句话就能点着你，先别回嘴。'}
+ ]
+},
+{
+ zh:'摩羯座', en:'Capricorn', glyph:'♑', date:'12.22–1.19', el:'earth', elName:'土', mode:'基本',
+ ruler:'土星', house:10, houseName:'官禄宫', branch:'子', stem:'癸', stemEl:'水',
+ kw:['长期','责任','克制','野心'],
+ tag:'不吭声，但一直在爬',
+ persona:'早熟、耐压、目标感极强。用「结果」证明自己，情绪一律往后放。表面冷，责任感重得吓人，最怕被说不靠谱。',
+ love:'谨慎、慢热，以「能不能一起过日子」为筛选标准。不擅长甜言蜜语，但会给结构性的安全感（计划、房子、未来）。被辜负后会彻底关门。',
+ career:'体制与结构里的长跑选手：企业管理、公务员、工程建筑、金融风控、项目管理、传统制造、供应链。越老越值钱。',
+ wx:'元素属土，天干癸水——土克水，蓄势型：把情绪和欲望全压进地基里，慢慢积累。极能忍，也极容易憋出病。需木疏土（放松、兴趣、表达）。',
+ balance:'土压水：压抑、肩颈胃不适、闷 → 补木：给自己排「无用」的时间',
+ days:[
+  {d:'11.16', z:4, a:3, c:4, t:'金星在你 10 宫顺行，职场人缘与形象加分；火木在 8 宫，偏财、贷款、分账有大动作。'},
+  {d:'11.17', z:3, a:3, c:4, t:'月过 2 宫：账户、报价、成本最该核一遍，能省下一笔。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 3 宫刑你 6 宫的天王星：沟通、文件、身体的小乱子，别硬扛。'}
+ ]
+},
+{
+ zh:'水瓶座', en:'Aquarius', glyph:'♒', date:'1.20–2.18', el:'air', elName:'风', mode:'固定',
+ ruler:'土星／天王', house:11, houseName:'福德／人际宫', branch:'丑', stem:'己', stemEl:'土',
+ kw:['系统','反骨','社群','疏离'],
+ tag:'站在人群里，但不在人群里',
+ persona:'系统思维加反骨。看问题先看结构，再看人；对「大家都这样」有本能抗拒。友善但疏离，朋友很多，交心的很少。',
+ love:'先当朋友再谈爱，需要精神共鸣和独立空间。讨厌黏、讨厌被查手机、讨厌情绪勒索。真动心时用「讲道理＋长期陪伴」表达。',
+ career:'与未来、系统、群体相关：程序员与算法、科研、AI、社群与公益、电子硬件、UX 研究、自媒体、NGO。忌等级森严的层级组织。',
+ wx:'元素属风（木），天干己土——木克土，天生「破旧立新」的配置：不断用新想法去翻旧结构。聪明、超前，但易孤高、脱离现实。需火（热情与人情）来暖。',
+ balance:'木克土：疏离、清高、想法不落地 → 补火：把想法做成人能用的东西',
+ days:[
+  {d:'11.16', z:4, a:4, c:3, t:'月亮在你命宫，情绪外放、想被看见；火木在 7 宫，伴侣或合作方火力全开。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月仍在命宫冲 7 宫火木：关系里的正面碰撞，说清楚比憋着强。'},
+  {d:'11.18', z:3, a:3, c:3, t:'月入 2 宫刑你 5 宫的天王星：冲动消费、投机上头，今天别下单。'}
+ ]
+},
+{
+ zh:'双鱼座', en:'Pisces', glyph:'♓', date:'2.19–3.20', el:'water', elName:'水', mode:'变动',
+ ruler:'木星／海王', house:12, houseName:'玄秘宫', branch:'寅', stem:'甲', stemEl:'木',
+ kw:['共情','想象','无边界','逃避'],
+ tag:'边界很薄，所以什么都能感觉到',
+ persona:'共情力天花板，能吸收整个房间的情绪。想象力与直觉极强，执行力看心情。逃避是默认防御机制，被逼急了会消失。',
+ love:'爱得像电影，也容易爱错人。会把对方的缺点自动补成优点，分手后还会替对方找理由。最吃「被理解」和「有故事感的相遇」。',
+ career:'与感受、影像、疗愈相关：艺术音乐影视、心理疗愈、医护、社工、摄影、编剧、玄学占卜、酒水调香。忌高压 KPI 与冷酷竞争。',
+ wx:'元素属水，天干甲木——水生木，柔软里长出向上之力，是十二星座里「柔中带韧」的标准配置。感知力强、成长性高；水多木漂则散（没边界、被带跑）。需庚金修剪（规则、处女型的人）。',
+ balance:'水多木漂：没边界、拖延、被消耗 → 补金：定规则、定期限、学会说不',
+ days:[
+  {d:'11.16', z:3, a:3, c:4, t:'月在你 12 宫：适合独处收尾，别接新活；火木在 6 宫，工作量爆炸但能出成绩。'},
+  {d:'11.17', z:3, a:3, c:3, t:'月过 12 宫末，直觉最准的一天，把梦记下来。'},
+  {d:'11.18', z:4, a:4, c:3, t:'月入你命宫，气场回满，适合露脸约会；但月刑天王，情绪容易突然翻面。'}
+ ]
+}
+];
+
+var ELC = { fire:'#ff7361', earth:'#d8a35f', air:'#63d5c6', water:'#6fa8ff' };
+var ELWX = { fire:'火', earth:'土', air:'木', water:'水' };
+var ELZH = { fire:'火象', earth:'土象', air:'风象', water:'水象' };
+/* 强制文字字形（VS15），否则 Windows 会把 ♈♉♊ 渲染成彩色 emoji 方块，元素配色全失效 */
+SIGNS.forEach(function(s){ s.glyph = s.glyph + '\uFE0E'; });
+/* ============================================================
+   3. 宫位 / 上升 / 五行 辅助数据
+   ============================================================ */
+var HOUSES = [
+ { n:1,  name:'命宫',        sign:'白羊', ruler:'火星',      d:'自我、外形、给人的第一印象、生命力与行动方式。', m:'我是什么样的人' },
+ { n:2,  name:'财帛宫',      sign:'金牛', ruler:'金星',      d:'钱、价值感、赚钱的本事、物质安全感与消费观。', m:'我靠什么活' },
+ { n:3,  name:'兄弟宫',      sign:'双子', ruler:'水星',      d:'沟通、学习、短途、兄弟姐妹与邻居、日常信息流。', m:'我怎么说话' },
+ { n:4,  name:'田宅宫',      sign:'巨蟹', ruler:'月亮',      d:'家、根、父母（尤其母亲）、内在安全感与隐私。', m:'我回到哪里' },
+ { n:5,  name:'子女宫',      sign:'狮子', ruler:'太阳',      d:'恋爱、创作、子女、玩、赌性与自我表达。', m:'我怎么快乐' },
+ { n:6,  name:'奴仆宫',      sign:'处女', ruler:'水星',      d:'工作日常、健康、技能、服务与被服务、习惯。', m:'我怎么运转' },
+ { n:7,  name:'夫妻宫',      sign:'天秤', ruler:'金星',      d:'伴侣、合作、一对一签约、公开的对手。', m:'我和谁在一起' },
+ { n:8,  name:'疾厄宫',      sign:'天蝎', ruler:'火星／冥王', d:'他人资源、共有财产、性、生死、深层转化与债务。', m:'我交出什么' },
+ { n:9,  name:'迁移宫',      sign:'射手', ruler:'木星',      d:'远方、高等教育、信仰、法律、出版与格局。', m:'我往哪去' },
+ { n:10, name:'官禄宫',      sign:'摩羯', ruler:'土星',      d:'事业、社会身份、名声、上级与长期成就。', m:'我成为谁' },
+ { n:11, name:'福德宫',      sign:'水瓶', ruler:'土星／天王', d:'朋友、社群、理想、收益与人脉网络。', m:'我和谁一伙' },
+ { n:12, name:'玄秘宫',      sign:'双鱼', ruler:'木星／海王', d:'潜意识、隐秘、疗愈、逃避、灵性与幕后。', m:'我藏了什么' }
+];
+
+var ASCINFO = [
+ { s:'白羊', first:'不好惹、走路带风、说话不绕', r:'火星' },
+ { s:'金牛', first:'稳、慢、有质感，让人放松也觉得固执', r:'金星' },
+ { s:'双子', first:'显小、话多、眼神灵活，一看就机灵', r:'水星' },
+ { s:'巨蟹', first:'温和有保护感，圆润亲和，初见略缩', r:'月亮' },
+ { s:'狮子', first:'有气场、发型显眼、笑起来亮，进门就被注意到', r:'太阳' },
+ { s:'处女', first:'清爽克制、细节讲究，初见略拘谨', r:'水星' },
+ { s:'天秤', first:'好看、会穿、有礼貌，纠结写在脸上', r:'金星' },
+ { s:'天蝎', first:'眼神重、气场压、话不多但句句有分量', r:'火星／冥王' },
+ { s:'射手', first:'松弛开朗、动作大，像随时要出发', r:'木星' },
+ { s:'摩羯', first:'显成熟、气场沉、表情少，得体但不好亲近', r:'土星' },
+ { s:'水瓶', first:'有点怪有点酷，穿搭有自己的一套逻辑', r:'土星／天王' },
+ { s:'双鱼', first:'柔、飘、眼神散，容易让人产生保护欲或误解', r:'木星／海王' }
+];
+
+/* ============================================================
+   4. 渲染：天象表 / 相位卡
+   ============================================================ */
+var TZ = 8;
+var BASE = { y:2026, m:11, d:16, h:12, mi:0, tz:TZ };
+
+function fmtDeg(lon){
+  var i = Math.floor(rev(lon) / 30), d = rev(lon) - i * 30;
+  var dd = Math.floor(d), mm = Math.round((d - dd) * 60);
+  if (mm === 60){ mm = 0; dd += 1; }
+  if (dd === 30){ dd = 0; i = (i + 1) % 12; }
+  return { idx:i, txt: SIGNS[i].zh + ' ' + dd + '°' + pad(mm,2) + '′' };
+}
+function fmtSpeed(v){
+  var s = v < 0 ? '−' : '+', a = Math.abs(v);
+  var dd = Math.floor(a), mm = Math.round((a - dd) * 60);
+  if (mm === 60){ mm = 0; dd += 1; }
+  return s + dd + '°' + pad(mm,2) + '′';
+}
+function hAdd(t, hours){
+  var o = { y:t.y, m:t.m, d:t.d, h:t.h, mi:t.mi, tz:t.tz };
+  var tot = o.h + o.mi / 60 + hours;
+  while (tot >= 24){ tot -= 24; o.d += 1; }
+  while (tot < 0){ tot += 24; o.d -= 1; }
+  o.h = Math.floor(tot); o.mi = Math.round((tot - o.h) * 60);
+  if (o.mi === 60){ o.mi = 0; o.h += 1; if (o.h === 24){ o.h = 0; o.d += 1; } }
+  return o;
+}
+
+var BODY_HEAD = [['Sun','☉','太阳'],['Moon','☽','月亮'],['Mercury','☿','水星'],['Venus','♀','金星'],
+                 ['Mars','♂','火星'],['Jupiter','♃','木星'],['Saturn','♄','土星'],
+                 ['Uranus','♅','天王星'],['Neptune','♆','海王星']];
+
+function renderEph(){
+  var tbody = document.querySelector('#eph-table tbody');
+  var d0 = bodiesAt(BASE), d1 = bodiesAt(hAdd(BASE, 24)), d2 = bodiesAt(hAdd(BASE, 48));
+  var html = '';
+  for (var i = 0; i < BODY_HEAD.length; i++){
+    var a = d0[i].lon, b = d1[i].lon, c = d2[i].lon;
+    var sp = rev(b - a); if (sp > 180) sp -= 360;
+    var st = sp < 0 ? '逆行' : (Math.abs(sp) < 0.12 ? '停滞' : '顺行');
+    var stCol = sp < 0 ? 'var(--pink)' : (Math.abs(sp) < 0.12 ? 'var(--gold)' : 'var(--air)');
+    html += '<tr><td><span class="sym">' + BODY_HEAD[i][1] + '</span>' + BODY_HEAD[i][2] + '</td>'
+          + '<td class="mono">' + fmtDeg(a).txt + '</td>'
+          + '<td class="mono">' + fmtDeg(b).txt + '</td>'
+          + '<td class="mono">' + fmtDeg(c).txt + '</td>'
+          + '<td class="mono">' + fmtSpeed(sp) + '</td>'
+          + '<td style="color:' + stCol + ';font-size:12.5px">' + st + '</td></tr>';
+  }
+  html += '<tr><td><span class="sym" style="opacity:.55">♇</span>冥王星</td>'
+        + '<td class="mono" colspan="4" style="color: var(--dim)">水瓶 4°30′ 左右（近似值，本页不含其精密算法）</td>'
+        + '<td style="color:var(--air);font-size:12.5px">顺行</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function moonIngressText(){
+  var target = 330; // 双鱼 0°
+  var prev = rev(moonPos(dCalc(BASE.y, BASE.m, BASE.d, BASE.h - BASE.tz)).lon);
+  for (var i = 1; i <= 288; i++){
+    var hh = i * 0.25;
+    var t = hAdd(BASE, hh);
+    var ut = t.h + t.mi / 60 - t.tz;
+    var cur = rev(moonPos(dCalc(t.y, t.m, t.d, ut)).lon);
+    if (prev < target && cur >= target){
+      var frac = (target - prev) / (cur - prev);
+      var mins = Math.round((hh - 0.25 + frac * 0.25) * 60);
+      var tI = hAdd(BASE, mins / 60);
+      return pad(tI.h,2) + ':' + pad(tI.mi,2);
+    }
+    prev = cur;
+  }
+  return '—';
+}
+
+function renderAspects(){
+  var b = bodiesAt(BASE);
+  var sun = b[0].lon, moon = b[1].lon, mer = b[2].lon, ven = b[3].lon;
+  var mar = b[4].lon, jup = b[5].lon, sat = b[6].lon, ura = b[7].lon;
+  var mj = Math.abs(rev(mar - jup)); if (mj > 180) mj = 360 - mj;
+  var sm = Math.abs(rev(sun - mar)); if (sm > 180) sm = 360 - sm;
+  var b2 = bodiesAt(hAdd(BASE, 24));
+  var venSpeed = rev(b2[3].lon - ven); if (venSpeed > 180) venSpeed -= 360;
+  var ing = moonIngressText();
+
+  var cards = [
+    { t:'火星 合 木星', v:'狮子 26°', s:'容许度 ' + Math.round(mj * 60) + '′', d:'行动力被放大到最大档：敢拍板、敢开口、敢花钱。适合发布与亮相，副作用是场面铺太大、脾气一点就着。', c:'fire' },
+    { t:'太阳 刑 火·木', v:'天蝎 24° 90° 狮子 26°', s:'容许度 ' + (Math.round(sm * 10) / 10) + '°', d:'想稳的那部分，和被「表现欲」推着走的那部分，在这三天正面对撞。摩擦高峰 11.16 晚—11.17。', c:'earth' },
+    { t:'金星 停滞转顺', v:'天秤 23°', s:'日速 ' + fmtSpeed(venSpeed), d:'金星刚从逆行里出来，几乎原地不动：旧情、旧账、旧关系在重新定价。别急着定论，等它恢复常速。', c:'air' },
+    { t:'月亮 入双鱼', v:'水瓶 → 双鱼', s:'11.18 ' + ing + ' CST', d:'换座后情绪立刻变软变黏：直觉、怀旧、想独处。18 日月刑天王星，变数来自突然的消息。', c:'water' }
+  ];
+  var box = document.getElementById('aspects');
+  box.innerHTML = cards.map(function(x){
+    return '<div class="card" style="border-color:rgba(255,255,255,.12)">'
+      + '<div style="font-size:11.5px;letter-spacing:1.5px;color:var(--' + x.c + ')">' + x.t + '</div>'
+      + '<div style="font-size:15px;font-weight:700;margin:3px 0 2px">' + x.v + '</div>'
+      + '<div class="mono" style="color:var(--dim);margin-bottom:8px">' + x.s + '</div>'
+      + '<div style="font-size:13px;color:#c9c4dd">' + x.d + '</div></div>';
+  }).join('');
+}
+
+/* ============================================================
+   5. 渲染：总表 / 星座卡 / 宫位 / 上升 / 五行
+   ============================================================ */
+function renderSumTable(){
+  document.querySelector('#sum-table tbody').innerHTML = SIGNS.map(function(s){
+    return '<tr>'
+      + '<td><span class="sym e-' + s.el + '">' + s.glyph + '</span><b>' + s.zh + '</b></td>'
+      + '<td class="mono">' + s.date + '</td>'
+      + '<td><span class="chip ' + s.el + '">' + s.elName + '象</span></td>'
+      + '<td>' + s.mode + '</td>'
+      + '<td>' + s.ruler + '</td>'
+      + '<td><span class="mono">' + s.house + '</span> ' + s.houseName + '</td>'
+      + '<td class="mono">' + s.branch + '</td>'
+      + '<td><b class="mono" style="color:var(--gold2)">' + s.stem + '</b> <span style="color:var(--dim)">' + s.stemEl + '</span></td>'
+      + '<td>' + ELWX[s.el] + '（元素）／' + s.stemEl + '（天干）</td>'
+      + '<td class="wrap" style="color:#c9c4dd">' + s.tag + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+function stars(n){
+  var s = '';
+  for (var i = 0; i < 5; i++) s += i < n ? '★' : '☆';
+  return s;
+}
+
+function renderSigns(){
+  var grid = document.getElementById('sign-grid');
+  grid.innerHTML = SIGNS.map(function(s){
+    var days = s.days.map(function(d){
+      return '<div class="fitem"><div class="fdate">' + d.d + '</div><div class="fbody">'
+        + '<div class="stars"><i>综</i>' + stars(d.z) + '<i>爱</i>' + stars(d.a) + '<i>业</i>' + stars(d.c) + '</div>'
+        + '<div class="txt">' + d.t + '</div></div></div>';
+    }).join('');
+    return '<article class="sc" data-el="' + s.el + '" data-glyph="' + s.glyph + '">'
+      + '<div class="sc-h"><span class="g e-' + s.el + '">' + s.glyph + '</span>'
+      + '<span class="n">' + s.zh + '</span><span class="d">' + s.date + '</span></div>'
+      + '<div class="sc-meta">'
+      + '<span class="chip ' + s.el + '">' + s.elName + '象 · ' + s.mode + '</span>'
+      + '<span class="chip gold">第 ' + s.house + ' 宫 ' + s.houseName + '</span>'
+      + '<span class="chip">天干 ' + s.stem + '（' + s.stemEl + '）</span>'
+      + '<span class="chip">地支 ' + s.branch + '</span>'
+      + '<span class="chip">守护 ' + s.ruler + '</span>'
+      + '</div>'
+      + '<blockquote>' + s.tag + '</blockquote>'
+      + '<div class="row"><span class="lab">性格</span><span class="val">' + s.persona + '</span></div>'
+      + '<div class="row"><span class="lab">爱情</span><span class="val">' + s.love + '</span></div>'
+      + '<div class="row"><span class="lab">事业</span><span class="val">' + s.career + '</span></div>'
+      + '<div class="wux"><b>五行 · ' + ELWX[s.el] + '／' + s.stemEl + '</b>　' + s.wx + '</div>'
+      + '<div class="fortune"><div class="ft-h">最近三天 · ' + s.days[0].d + ' → ' + s.days[2].d + '</div>' + days + '</div>'
+      + '</article>';
+  }).join('');
+
+  document.querySelectorAll('#filters button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#filters button').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      var el2 = btn.dataset.el;
+      document.querySelectorAll('.sc').forEach(function(c){
+        c.style.display = (el2 === 'all' || c.dataset.el === el2) ? '' : 'none';
+      });
+    });
+  });
+}
+
+function renderHouses(){
+  document.getElementById('house-grid').innerHTML = HOUSES.map(function(h){
+    return '<div class="hcard"><div class="hn">HOUSE ' + pad(h.n,2) + '</div>'
+      + '<div class="ht">' + h.name + '　<span style="font-size:12px;color:var(--muted)">先天 ' + h.sign + '</span></div>'
+      + '<div class="hd">' + h.d + '</div>'
+      + '<div class="hm">宫主星 ' + h.ruler + '　·　' + h.m + '</div></div>';
+  }).join('');
+}
+
+function renderAscTable(){
+  document.querySelector('#asc-table tbody').innerHTML = ASCINFO.map(function(a, i){
+    return '<tr><td><span class="sym e-' + SIGNS[i].el + '">' + SIGNS[i].glyph + '</span>上升' + a.s + '</td>'
+      + '<td class="wrap">' + a.first + '<span style="color:var(--dim)">　·　命主星 ' + a.r + '</span></td></tr>';
+  }).join('');
+}
+
+function renderWuxing(){
+  var elCount = { fire:0, earth:0, air:0, water:0 };
+  var stemCount = { 木:0, 火:0, 土:0, 金:0, 水:0 };
+  SIGNS.forEach(function(s){ elCount[s.el]++; stemCount[s.stemEl]++; });
+
+  var groups = [
+    { k:'fire',  name:'火象三兄弟', signs:'白羊 · 狮子 · 射手', wx:'火', stems:'乙木（白羊）、己土（狮子）、壬水（射手）',
+      txt:'元素全是火，天干却三样都不同——火象是十二组里唯一「内核完全分化」的一组。白羊是木生火的爆发型，狮子是火生土的建设型，射手是水火相激的冒险型。同是火象，做事逻辑根本不是一回事。' },
+    { k:'earth', name:'土象三兄弟', signs:'金牛 · 处女 · 摩羯', wx:'土', stems:'戊土（金牛）、庚金（处女）、癸水（摩羯）',
+      txt:'最「自洽」的一组：土生金（金牛稳 → 处女精）、土克水（摩羯把情绪压成地基）。三个人都不爱说，但金牛守成、处女校对、摩羯攀爬，土象的三种用法在这里齐了。' },
+    { k:'air',   name:'风象三兄弟', signs:'双子 · 天秤 · 水瓶', wx:'木', stems:'丙火（双子）、辛金（天秤）、己土（水瓶）',
+      txt:'最容易「点什么着什么」的一组：木生火（双子点火就着）、金克木（天秤的审美天天修剪自己的念头）、木克土（水瓶专拆旧结构）。想法多、落地少，是这组的通病。' },
+    { k:'water', name:'水象三兄弟', signs:'巨蟹 · 天蝎 · 双鱼', wx:'水', stems:'丁火（巨蟹）、戊土（天蝎）、甲木（双鱼）',
+      txt:'看着最软，其实最有渗透力：水生木（双鱼柔中带韧）、水克火（天蝎压住冲动）、土蓄水（天蝎的深）、丁火照水（巨蟹的暖）。缺的是金——所以水象最需要「规则」来立边界。' }
+  ];
+
+  document.getElementById('wx-summary').innerHTML = groups.map(function(g){
+    return '<div class="card" style="border-color:rgba(255,255,255,.12)">'
+      + '<div style="font-size:11.5px;letter-spacing:1.5px;color:var(--' + g.k + ')">' + ELZH[g.k] + ' · 五行属' + g.wx + '</div>'
+      + '<div style="font-size:16px;font-weight:800;margin:3px 0 1px">' + g.name + '</div>'
+      + '<div class="mono" style="color:var(--muted);font-size:12px">3 / 12 · ' + g.signs + '</div>'
+      + '<div style="font-size:12.5px;color:var(--gold2);margin:8px 0 6px">天干：' + g.stems + '</div>'
+      + '<div style="font-size:13px;color:#c9c4dd">' + g.txt + '</div></div>';
+  }).join('');
+
+  document.querySelector('#wx-table tbody').innerHTML = SIGNS.map(function(s){
+    var rel = {
+      '火>木':'木生火 · 天干生元素', '木>火':'木生火 · 元素生天干',
+      '火>土':'火生土 · 元素生天干', '土>金':'土生金 · 元素生天干',
+      '水>木':'水生木 · 元素生天干', '木>水':'水生木 · 天干生元素',
+      '水>火':'水克火 · 元素克天干', '火>水':'水克火 · 天干克元素',
+      '土>水':'土克水 · 元素克天干', '水>土':'土克水 · 天干克元素',
+      '金>木':'金克木 · 元素克天干', '木>金':'金克木 · 天干克元素',
+      '木>土':'木克土 · 元素克天干', '土>木':'木克土 · 天干克元素',
+      '火>金':'火克金', '金>火':'火克金',
+      '土>土':'土重 · 自旺伏吟', '火>火':'火重 · 自旺伏吟',
+      '木>木':'木重 · 自旺伏吟', '水>水':'水重 · 自旺伏吟', '金>金':'金重 · 自旺伏吟'
+    }[ELWX[s.el] + '>' + s.stemEl] || (ELWX[s.el] + '／' + s.stemEl);
+    return '<tr>'
+      + '<td><span class="sym e-' + s.el + '">' + s.glyph + '</span>' + s.zh + '</td>'
+      + '<td><span class="chip ' + s.el + '">' + ELWX[s.el] + '</span></td>'
+      + '<td class="mono" style="color:var(--gold2);font-weight:700">' + s.stem + '</td>'
+      + '<td>' + s.stemEl + '</td>'
+      + '<td class="mono" style="color:var(--muted)">' + rel + '</td>'
+      + '<td><b>' + (s.el === 'fire' || s.el === 'water' ? ELWX[s.el] : s.stemEl) + '</b></td>'
+      + '<td class="wrap" style="min-width:300px">' + s.wx + '</td>'
+      + '<td class="wrap" style="min-width:240px;color:var(--muted)">' + s.balance + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+/* ============================================================
+   6. 星盘轮盘
+   ============================================================ */
+var SVGNS = 'http://www.w3.org/2000/svg';
+function pt(r, lon, asc){
+  var th = (180 + (lon - asc)) * D2R;
+  return [370 + r * Math.cos(th), 370 - r * Math.sin(th)];
+}
+function arcPath(r1, r2, a1, a2, asc){
+  var p1 = pt(r1, a1, asc), p2 = pt(r2, a1, asc), p3 = pt(r2, a2, asc), p4 = pt(r1, a2, asc);
+  return 'M' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2)
+       + ' L' + p2[0].toFixed(2) + ' ' + p2[1].toFixed(2)
+       + ' A' + r2 + ' ' + r2 + ' 0 0 0 ' + p3[0].toFixed(2) + ' ' + p3[1].toFixed(2)
+       + ' L' + p4[0].toFixed(2) + ' ' + p4[1].toFixed(2)
+       + ' A' + r1 + ' ' + r1 + ' 0 0 0 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2) + ' Z';
+}
+
+function drawWheel(cfg){
+  var asc = cfg.asc, mc = cfg.mc;
+  var svg = document.getElementById('chart');
+  var o = '';
+  var ELBY = ['fire','earth','air','water'];
+
+  o += '<defs><radialGradient id="glow"><stop offset="0%" stop-color="rgba(165,139,236,.35)"/>'
+     + '<stop offset="100%" stop-color="rgba(165,139,236,0)"/></radialGradient></defs>';
+  o += '<circle cx="370" cy="370" r="330" fill="url(#glow)"/>';
+  o += '<circle cx="370" cy="370" r="350" fill="none" stroke="rgba(230,192,124,.35)" stroke-width="1"/>';
+  o += '<circle cx="370" cy="370" r="318" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
+  o += '<circle cx="370" cy="370" r="294" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>';
+  o += '<circle cx="370" cy="370" r="96" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.12)" stroke-width="1"/>';
+
+  // 星座环
+  for (var i = 0; i < 12; i++){
+    var a1 = i * 30, a2 = a1 + 30;
+    o += '<path d="' + arcPath(318, 350, a1, a2, asc) + '" fill="' + ELC[ELBY[i % 4]] + '" fill-opacity="0.13" stroke="rgba(255,255,255,.14)" stroke-width="0.6"/>';
+    var gp = pt(334, a1 + 15, asc);
+    o += '<text x="' + gp[0].toFixed(1) + '" y="' + (gp[1] + 8).toFixed(1) + '" text-anchor="middle" font-size="24" fill="' + ELC[ELBY[i % 4]] + '" opacity="0.95">' + SIGNS[i].glyph + '</text>';
+  }
+  // 刻度
+  for (var dgr = 0; dgr < 360; dgr += 5){
+    var len = dgr % 10 === 0 ? 22 : 12;
+    var p1 = pt(318, dgr, asc), p2 = pt(318 - len, dgr, asc);
+    o += '<line x1="' + p1[0].toFixed(1) + '" y1="' + p1[1].toFixed(1) + '" x2="' + p2[0].toFixed(1) + '" y2="' + p2[1].toFixed(1) + '" stroke="rgba(255,255,255,' + (dgr % 30 === 0 ? '.35' : '.16') + ')" stroke-width="1"/>';
+  }
+  // 宫界
+  for (var h = 0; h < 12; h++){
+    var lon = asc + h * 30;
+    var q1 = pt(96, lon, asc), q2 = pt(318, lon, asc);
+    var isAngle = (h % 3 === 0);
+    o += '<line x1="' + q1[0].toFixed(1) + '" y1="' + q1[1].toFixed(1) + '" x2="' + q2[0].toFixed(1) + '" y2="' + q2[1].toFixed(1) + '" stroke="rgba(230,192,124,' + (isAngle ? '.55' : '.22') + ')" stroke-width="' + (isAngle ? 1.6 : 1) + '"/>';
+    var hp = pt(114, lon + 15, asc);
+    o += '<text x="' + hp[0].toFixed(1) + '" y="' + (hp[1] + 4).toFixed(1) + '" text-anchor="middle" font-size="11" fill="rgba(230,192,124,.75)">' + (h + 1) + '</text>';
+  }
+  // 四轴
+  var axes = [[asc, 'ASC'], [rev(asc + 90), 'IC'], [rev(asc + 180), 'DSC'], [rev(asc + 270), 'MC']];
+  o += '<line x1="' + pt(96, mc, asc)[0].toFixed(1) + '" y1="' + pt(96, mc, asc)[1].toFixed(1) + '" x2="' + pt(318, mc, asc)[0].toFixed(1) + '" y2="' + pt(318, mc, asc)[1].toFixed(1) + '" stroke="rgba(165,139,236,.65)" stroke-width="1.4" stroke-dasharray="5 4"/>';
+  axes.forEach(function(ax){
+    var lp = pt(364, ax[0], asc);
+    var big = ax[1] === 'MC';
+    var ap = pt(318, ax[0], asc), bp = pt(296, ax[0], asc);
+    o += '<line x1="' + ap[0].toFixed(1) + '" y1="' + ap[1].toFixed(1) + '" x2="' + bp[0].toFixed(1) + '" y2="' + bp[1].toFixed(1) + '" stroke="' + (big ? 'rgba(165,139,236,.9)' : 'rgba(230,192,124,.9)') + '" stroke-width="2"/>';
+    o += '<text x="' + lp[0].toFixed(1) + '" y="' + (lp[1] + 4).toFixed(1) + '" text-anchor="middle" font-size="11" letter-spacing="1" fill="' + (big ? 'rgba(165,139,236,.95)' : 'rgba(230,192,124,.95)') + '">' + ax[1] + '</text>';
+  });
+
+  // 行星（简单防重叠：相邻 8° 内轮流下潜）
+  var sorted = cfg.bodies.slice().sort(function(p, q){ return rev(p.lon - asc) - rev(q.lon - asc); });
+  var lastRel = -999, level = 0;
+  var radii = [206, 176, 148];
+  sorted.forEach(function(b){
+    var rel = rev(b.lon - asc);
+    if (rel - lastRel < 8) level = (level + 1) % 3; else level = 0;
+    lastRel = rel;
+    var r = radii[level];
+    var pp = pt(r, b.lon, asc);
+    var col = (b.k === 'Sun' || b.k === 'Moon') ? 'var(--gold2)' : '#ece9f6';
+    o += '<line x1="' + pt(294, b.lon, asc)[0].toFixed(1) + '" y1="' + pt(294, b.lon, asc)[1].toFixed(1) + '" x2="' + pt(r + 18, b.lon, asc)[0].toFixed(1) + '" y2="' + pt(r + 18, b.lon, asc)[1].toFixed(1) + '" stroke="rgba(255,255,255,.22)" stroke-width=".8"/>';
+    o += '<circle cx="' + pt(294, b.lon, asc)[0].toFixed(1) + '" cy="' + pt(294, b.lon, asc)[1].toFixed(1) + '" r="2" fill="' + col + '"/>';
+    o += '<text x="' + pp[0].toFixed(1) + '" y="' + (pp[1] + 6).toFixed(1) + '" text-anchor="middle" font-size="19" fill="' + col + '">' + b.g + '</text>';
+    o += '<text x="' + pp[0].toFixed(1) + '" y="' + (pp[1] + 19).toFixed(1) + '" text-anchor="middle" font-size="8" fill="rgba(236,233,246,.55)">' + Math.floor(rev(b.lon) % 30) + '°</text>';
+  });
+
+  // 中心信息
+  var ct = cfg.center || ['等宫制', '', ''];
+  o += '<text x="370" y="362" text-anchor="middle" font-size="11" fill="rgba(230,192,124,.85)">' + ct[0] + '</text>';
+  o += '<text x="370" y="378" text-anchor="middle" font-size="9.5" fill="rgba(236,233,246,.5)">' + ct[1] + '</text>';
+  o += '<text x="370" y="392" text-anchor="middle" font-size="9.5" fill="rgba(236,233,246,.35)">' + ct[2] + '</text>';
+
+  svg.innerHTML = o;
+}
+
+function aspectList(bodies){
+  var names = { Sun:'太阳', Moon:'月亮', Mercury:'水星', Venus:'金星', Mars:'火星', Jupiter:'木星', Saturn:'土星', Uranus:'天王星', Neptune:'海王星' };
+  var tgt = [[0,'合'],[60,'六合'],[90,'刑'],[120,'拱'],[180,'冲']];
+  var out = [];
+  for (var i = 0; i < bodies.length; i++){
+    for (var j = i + 1; j < bodies.length; j++){
+      var d = Math.abs(rev(bodies[i].lon - bodies[j].lon)); if (d > 180) d = 360 - d;
+      var orb = 7;
+      for (var k = 0; k < tgt.length; k++){
+        var diff = Math.abs(d - tgt[k][0]);
+        if (diff <= orb){
+          out.push({ a:names[bodies[i].k], b:names[bodies[j].k], t:tgt[k][1], orb:diff });
+        }
+      }
+    }
+  }
+  out.sort(function(x, y){ return x.orb - y.orb; });
+  return out.slice(0, 6);
+}
+
+function wheelInfo(cfg, title){
+  var ascF = fmtDeg(cfg.asc), mcF = fmtDeg(cfg.mc);
+  var sun = cfg.bodies.filter(function(b){ return b.k === 'Sun'; })[0];
+  var moon = cfg.bodies.filter(function(b){ return b.k === 'Moon'; })[0];
+  var asp = aspectList(cfg.bodies);
+  var rows = [
+    ['上升 ASC', ascF.txt, '整张盘的框架'],
+    ['中天 MC', mcF.txt, '事业与公开形象']
+  ];
+  if (sun) rows.push(['太阳 ☉', fmtDeg(sun.lon).txt, '身份与意志']);
+  if (moon) rows.push(['月亮 ☽', fmtDeg(moon.lon).txt, '情绪与安全感']);
+  var html = '<h3 style="margin-top:0">' + title + '</h3>';
+  html += rows.map(function(r){
+    return '<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);align-items:baseline">'
+      + '<span style="font-size:12px;color:var(--gold);width:74px;flex:none">' + r[0] + '</span>'
+      + '<span style="font-size:14px;font-weight:700">' + r[1] + '</span>'
+      + '<span style="font-size:11.5px;color:var(--dim);margin-left:auto">' + r[2] + '</span></div>';
+  }).join('');
+  if (asp.length){
+    html += '<div style="margin-top:12px;font-size:12px;color:var(--dim);letter-spacing:1px">主要相位</div>';
+    html += asp.map(function(a){
+      return '<div style="font-size:12.5px;color:#c9c4dd;padding:3px 0">' + a.a + ' ' + a.t + ' ' + a.b
+        + '<span class="mono" style="color:var(--dim)">　容许度 ' + a.orb.toFixed(1) + '°</span></div>';
+    }).join('');
+  }
+  html += '<p class="note" style="margin-top:12px">等宫制：第 1 宫宫头 = 上升，之后每 30° 一宫。中天可能与第 10 宫宫头不完全重合，正常。</p>';
+  document.getElementById('wheel-info').innerHTML = html;
+}
+
+/* ============================================================
+   7. 计算器
+   ============================================================ */
+var NATAL = null;
+function setupCalc(){
+  var fDate = document.getElementById('f-date'), fTime = document.getElementById('f-time');
+  var fCity = document.getElementById('f-city'), fTz = document.getElementById('f-tz');
+  var fLon = document.getElementById('f-lon'), fLat = document.getElementById('f-lat');
+
+  fCity.addEventListener('change', function(){
+    if (fCity.value === 'custom') return;
+    var v = fCity.value.split(',');
+    fLon.value = v[0]; fLat.value = v[1];
+    run();
+  });
+
+  function readInput(){
+    var dv = fDate.value.split('-'), tv = fTime.value.split(':');
+    return {
+      y: +dv[0], m: +dv[1], d: +dv[2],
+      h: +tv[0] || 0, mi: +tv[1] || 0,
+      tz: parseFloat(fTz.value) || 0,
+      lon: parseFloat(fLon.value) || 0,
+      lat: parseFloat(fLat.value) || 0
+    };
+  }
+
+  function run(silent){
+    var q = readInput();
+    if (!q.y){ return; }
+    var t = { y:q.y, m:q.m, d:q.d, h:q.h, mi:q.mi, tz:q.tz };
+    var bs = bodiesAt(t);
+    var ang = angles(t, q.lon, q.lat);
+    var sun = bs[0].lon, moon = bs[1].lon;
+    var si = Math.floor(rev(sun) / 30), mi = Math.floor(rev(moon) / 30), ai = Math.floor(rev(ang.asc) / 30), mci = Math.floor(rev(ang.mc) / 30);
+    var S = SIGNS[si], M = SIGNS[mi], A = SIGNS[ai], MCs = SIGNS[mci];
+
+    NATAL = { asc: ang.asc, mc: ang.mc, bodies: [bs[0], bs[1]] };
+
+    var boxes = [
+      ['太阳 ☉', S.zh + ' ' + fmtDeg(sun).txt.split(' ')[1], S.kw.slice(0, 2).join('·')],
+      ['月亮 ☽', M.zh + ' ' + fmtDeg(moon).txt.split(' ')[1], M.kw.slice(0, 2).join('·')],
+      ['上升 ASC', A.zh + ' ' + fmtDeg(ang.asc).txt.split(' ')[1], ASCINFO[ai].first],
+      ['中天 MC', MCs.zh + ' ' + fmtDeg(ang.mc).txt.split(' ')[1], '事业门面']
+    ];
+    var out = boxes.map(function(b){
+      return '<div class="rbox"><span class="k">' + b[0] + '</span><span class="v">' + b[1] + '</span><span class="s">' + b[2] + '</span></div>';
+    }).join('');
+
+    var cusps = [];
+    for (var k = 0; k < 12; k++){
+      var c = fmtDeg(ang.asc + k * 30);
+      cusps.push((k + 1) + '宫 ' + c.txt);
+    }
+    out += '<div class="card" style="padding:14px"><div style="font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">十二宫宫头（等宫制）</div>'
+      + '<div class="mono" style="color:#c9c4dd;line-height:1.9;white-space:normal">' + cusps.join('　·　') + '</div></div>';
+    out += '<p class="note">组合读法：太阳在' + S.zh + '（' + S.tag + '），月亮在' + M.zh
+      + '，上升' + A.zh + '——别人第一眼觉得你「' + ASCINFO[ai].first + '」，'
+      + '真正的内核是' + S.kw[0] + '，情绪上需要' + M.kw[0] + '。</p>';
+
+    document.getElementById('calc-result').innerHTML = out;
+    if (!silent){
+      drawWheel({ asc: ang.asc, mc: ang.mc, bodies: [bs[0], bs[1]],
+        center: ['出生盘 · 等宫制', q.y + '.' + q.m + '.' + q.d + ' ' + pad(q.h,2) + ':' + pad(q.mi,2), 'UT' + (q.tz >= 0 ? '+' : '') + q.tz] });
+      wheelInfo({ asc: ang.asc, mc: ang.mc, bodies: [bs[0], bs[1]] }, '你的出生盘');
+      document.getElementById('btn-transit').classList.remove('on');
+      document.getElementById('btn-natal').classList.add('on');
+    }
+  }
+
+  document.getElementById('btn-calc').addEventListener('click', function(){ run(); });
+  document.getElementById('btn-now').addEventListener('click', function(){
+    var n = new Date();
+    fDate.value = n.getFullYear() + '-' + pad(n.getMonth() + 1, 2) + '-' + pad(n.getDate(), 2);
+    fTime.value = pad(n.getHours(), 2) + ':' + pad(n.getMinutes(), 2);
+    run();
+  });
+
+  document.getElementById('btn-transit').addEventListener('click', function(){
+    document.getElementById('btn-transit').classList.add('on');
+    document.getElementById('btn-natal').classList.remove('on');
+    showTransit();
+  });
+  document.getElementById('btn-natal').addEventListener('click', function(){
+    document.getElementById('btn-natal').classList.add('on');
+    document.getElementById('btn-transit').classList.remove('on');
+    if (NATAL) {
+      drawWheel({ asc: NATAL.asc, mc: NATAL.mc, bodies: NATAL.bodies, center:['出生盘 · 等宫制', '', ''] });
+      wheelInfo(NATAL, '你的出生盘');
+    } else {
+      run();
+    }
+  });
+
+  showTransit();
+  document.getElementById('calc-result').innerHTML =
+    '<p class="note">填好上方日期、时间、出生地与经纬度，点「计算我的星盘」——太阳、月亮、上升、中天、十二宫宫头会一次出来，左边轮盘同时换成你的盘。'
+    + '不知道经纬度就选城市，会自动填。</p>';
+}
+
+function showTransit(){
+  var bs = bodiesAt(BASE);
+  var ang = angles(BASE, 116.41, 39.90);
+  drawWheel({ asc: ang.asc, mc: ang.mc, bodies: bs,
+    center: ['天象盘 · 2026.11.16', '12:00 CST / 北京', '等宫制'] });
+  wheelInfo({ asc: ang.asc, mc: ang.mc, bodies: bs }, '今日天象盘 · 2026.11.16 12:00');
+}
+
+/* ============================================================
+   8. 启动
+   ============================================================ */
+(function boot(){
+  document.head.insertAdjacentHTML('beforeend', '<style>section{scroll-margin-top:74px}</style>');
+
+  var st = document.getElementById('stars');
+  var frag = '';
+  for (var i = 0; i < 110; i++){
+    var x = (Math.random() * 100).toFixed(2), y = (Math.random() * 100).toFixed(2);
+    var s = (Math.random() * 1.5 + 0.6).toFixed(2);
+    var dl = (Math.random() * 5).toFixed(2), du = (Math.random() * 4 + 3).toFixed(1);
+    frag += '<span class="star" style="left:' + x + '%;top:' + y + '%;width:' + s + 'px;height:' + s
+          + 'px;animation-delay:-' + dl + 's;animation-duration:' + du + 's"></span>';
+  }
+  st.innerHTML = frag;
+
+  renderEph();
+  renderAspects();
+  renderSumTable();
+  renderSigns();
+  renderHouses();
+  renderAscTable();
+  renderWuxing();
+  setupCalc();
+
+  var n = new Date();
+  document.getElementById('stamp').textContent =
+    n.getFullYear() + '-' + pad(n.getMonth() + 1, 2) + '-' + pad(n.getDate(), 2) + ' '
+    + pad(n.getHours(), 2) + ':' + pad(n.getMinutes(), 2);
+})();
+</script>
+</body>
+</html>
